@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seçim Sayım</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Style+Script&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        .input{
+            font-size:20px;
+            box-shadow:0 0 40px #9b9b9b;
+        }
+        span:active{
+            opacity:1!important;
+            transition:100ms all;
+        }
+		#reset:active{
+			opacity:1!important;
+		}
+		
+    </style>
+</head>
+<body>
+	<p id="reset" style="position:absolute;top:3%;right:3%;z-index:65;font-size:20px;margin:unset;background:white;padding:0.3em .7em;opacity:0.2;border-radius:10px;">Reset</p>
+    <font style="font-size: 72px;line-height: 0.7;bottom: 3%;right: 3%;position:fixed;background: #4290ae;display: block;height: 36px;overflow: hidden;"><a href="#main" style="color:white;">↑</a></font>
+	<h6 id="vote" style="display:none;position:absolute;z-index:65;color:darkgrey;font-weight:700;font-size:20px;background:white;border-radius:5px;">Toplam Oy: </h6>
+	<div style="height:100vh;" id="main">
+        <div class="KK" style="height:50%;position:relative;overflow:hidden;background-color:#4290ae;">
+            <img src="https://pbs.twimg.com/media/FukUT2RWYAEBVOs.jpg" style="width:90%;margin-left:24px;position:absolute;bottom:0;right:-20%;" alt="">
+            <h4 style="font-family: 'Style Script', cursive;font-size:39.06px;position:absolute;bottom:3%;left:3%;color:white;">
+                <p class="yuzdekk yuzdet" style="font-family:sans-serif;font-size:16px;margin:unset;font-weight:200;"></p>
+                Kemal Kılıçdaroğlu</h4>
+            <div style="position:absolute;height:100%;width:100%;z-index:50;">
+                <span data-number="1" style="position:absolute;width:50%;height:100%;background-image:linear-gradient(to bottom, transparent, rgba(0,0,0,.5), transparent);opacity:0;">
+                <font style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:72px;color:white;opacity:inherit;">-</font>
+                </span>
+                <span data-number="2" style="right:0;position:absolute;width:50%;height:100%;background-image:linear-gradient(to bottom, transparent, rgba(0,0,0,.5), transparent);opacity:0;">
+                    <font style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:72px;color:white;opacity:inherit;">+</font>
+                    </span>
+            </div>
+            <input class="input" type="number" min="0" style="text-align:center;width:50px;height:50px;position:absolute;z-index:55;border:unset;border-radius:50%;padding:8px;top:3%;left:3%;">
+        </div>
+        <div class="RTE" style="height:50%;position:relative;background-color:#cccccc;overflow:hidden;">
+            <img style="width:100%;transform:scaleX(-1);position:absolute;left:-25%;" src="https://www.tccb.gov.tr/assets/resim/genel/RecepTayyipErdogan-Portre-04.png" alt="">
+            <h4 style="font-family: 'Style Script', cursive;font-size:39.06px;position:absolute;bottom:3%;left:3%;color:white;">
+                <p class="yuzderte yuzdet" style="font-family:sans-serif;font-size:16px;margin:unset;font-weight:200;"></p>
+                R. Tayyip Erdoğan</h4>
+            <div style="position:absolute;height:100%;width:100%;z-index:50;">
+                <span data-number="1" style="position:absolute;width:50%;height:100%;background-image:linear-gradient(to bottom, transparent, rgba(0,0,0,.5), transparent);opacity:0;">
+                    <font style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:72px;color:white;opacity:inherit;">-</font>
+                    </span>
+                    <span data-number="2" style="right:0;position:absolute;width:50%;height:100%;background-image:linear-gradient(to bottom, transparent, rgba(0,0,0,.5), transparent);opacity:0;">
+                        <font style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:72px;color:white;opacity:inherit;">+</font>
+                        </span>
+            </div>
+            <input class="input" type="number" min="0" style="text-align:center;width:50px;height:50px;position:absolute;z-index:55;border:unset;border-radius:50%;padding:8px;top:3%;right:3%;">
+
+        </div>
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script>
+    var veriler = getCookies().split(",");
+    var Snkemalk =veriler[0]==""?0:parseFloat(veriler[0]);
+    var SnTayyipe =veriler[1]==""?0:parseFloat(veriler[1]);
+    if(Snkemalk>=1 ||SnTayyipe>=1){
+		yuzdehesapla();kontrolet(SnTayyipe,Snkemalk);
+	}
+	$(".input").eq(0).val(Snkemalk);
+    $(".input").eq(1).val(SnTayyipe);
+    $(".input").eq(0).change(function(){
+        Snkemalk = parseFloat($(this).val());
+        kontrolet(SnTayyipe,Snkemalk);
+    });
+    $(".input").eq(1).change(function(){
+        SnTayyipe = parseFloat($(this).val());
+        kontrolet(SnTayyipe,Snkemalk);
+    });
+    $(".KK > div > span").click(function(){
+        var number = $(this).data("number");
+        if(number==1 && Snkemalk!=0){
+            Snkemalk--;
+        }else if(number==2){
+            Snkemalk++;
+        }
+        $(".input").eq(0).val(Snkemalk);
+        kontrolet(SnTayyipe,Snkemalk);
+    });
+    $(".RTE > div > span").click(function(){
+        var number = $(this).data("number");
+        if(number==1 && SnTayyipe!=0){
+            SnTayyipe--;
+        }else if(number==2){
+            SnTayyipe++;
+        }
+        $(".input").eq(1).val(SnTayyipe);
+        kontrolet(SnTayyipe,Snkemalk);
+    });
+    function kontrolet(a,b){
+        yuzdehesapla();
+        $("#vote").css("display","block");
+        $("#vote").html("Toplam Oy: "+ (a+b));
+		boyutlandir();
+    }
+    function yuzdehesapla(){
+        var toplam = (Snkemalk+SnTayyipe);
+        var KKYuzde = Snkemalk/(toplam/100);
+        var RTEYuzde = SnTayyipe/(toplam/100);
+        $(".yuzdekk").html("Yüzde: "+KKYuzde.toFixed(2)+"%");
+        $(".yuzderte").html("Yüzde: "+RTEYuzde.toFixed(2)+"%");
+        var array =[Snkemalk,SnTayyipe];
+        createCookies("veriler",(array),365);
+    }
+    
+    function createCookies(name,veri,aktiflik){
+        const date = new Date();
+        date.setTime(date.getTime() + aktiflik*24*60*60*1000);
+        document.cookie = `${name}=${veri};expires=${date.toUTCString()}; path=/`
+    }
+    function getCookies(){
+        const decodes = decodeURIComponent(document.cookie)==""?"0,0":decodeURIComponent(document.cookie);
+		return decodeURIComponent(document.cookie)==""?"0,0":decodes.split("=")[1];
+    }	
+	boyutlandir();
+	function boyutlandir(){
+		var toplam_oy = $("#vote");
+		var main = $("#main");
+		var sonuc = (main.innerWidth()-toplam_oy.innerWidth())/2;
+		var sonuc2 = (main.innerHeight()-toplam_oy.innerHeight())/2;
+		toplam_oy.css({"marginLeft":sonuc+"px","marginTop":sonuc2});
+	}
+	$('#reset').click(()=>{
+		sure();
+	});
+	function sure(){
+		let conf=confirm("VERİLER SIFIRLANACAK, EMİN MİSİN?"); 
+		if(conf){
+			createCookies("veriler",null,-1);
+			$("#vote").css("display","none");
+			$(".yuzdet").html("Yüzde: 0%");
+			$("input").val(0);
+			Snkemalk=0;
+			SnTayyipe=0;
+		}
+	}
+	
+</script>
+</body>
+</html>
